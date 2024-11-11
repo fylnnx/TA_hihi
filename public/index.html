@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Embed dan Extract Audio</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <h1>Audio Steganography</h1>
+    <form id="embedForm">
+        <h2>Embed Pesan</h2>
+        <input type="file" id="audioFile" accept=".wav" required><br><br>
+        <input type="text" id="message" placeholder="Masukkan pesan (maks 16 karakter)" required><br><br>
+        <input type="text" id="secretKey" placeholder="Masukkan kunci (16 karakter)" required><br><br>
+        <button type="submit">Embed Pesan</button>
+    </form>
+
+    <form id="extractForm">
+        <h2>Extract Pesan</h2>
+        <input type="file" id="audioFileExtract" accept=".wav" required><br><br>
+        <input type="text" id="secretKeyExtract" placeholder="Masukkan kunci (16 karakter)" required><br><br>
+        <button type="submit">Extract Pesan</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script src="/script.js"></script>
+</body>
+</html>
