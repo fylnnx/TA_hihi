@@ -1,35 +1,46 @@
-const express = require('express');
+// functions/api.js
 const AES = require('../AES3');
 const SpreadSpectrum = require('../SpreadSpectrumFIX');
-const fs = require('fs');
-const multer = require('multer');
-const router = express.Router();
 
-const upload = multer({ dest: 'uploads/' });
+exports.handler = async (event, context) => {
+    try {
+        if (event.httpMethod === "POST") {
+            const { audioFileName, message, secretKey, outputFileName } = JSON.parse(event.body);
 
-router.post('/embed', upload.single('audioFile'), (req, res) => {
-    const { message, secretKey } = req.body;
-    const audioFilePath = req.file.path;
-    const outputFilePath = `uploads/output_${Date.now()}.wav`;
+            // Encrypt message
+            const encryptedText = AES.encryptAES128(message, secretKey);
+            console.log("Encrypted Text:", encryptedText);
 
-    const encryptedText = AES.encryptAES128(message, secretKey);
-    SpreadSpectrum.embed(audioFilePath, encryptedText, secretKey, outputFilePath);
+            // Embed encrypted message into audio
+            await SpreadSpectrum.embed(audioFileName, encryptedText, secretKey, outputFileName);
 
-    res.download(outputFilePath, 'stego_audio.wav', () => {
-        fs.unlinkSync(audioFilePath);
-        fs.unlinkSync(outputFilePath);
-    });
-});
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ message: "Pesan berhasil di-embed ke dalam audio", outputFileName })
+            };
+        } else if (event.httpMethod === "GET") {
+            const { audioFileName, secretKey } = event.queryStringParameters;
 
-router.post('/extract', upload.single('audioFile'), (req, res) => {
-    const { secretKey } = req.body;
-    const audioFilePath = req.file.path;
+            const encryptedText = await SpreadSpectrum.extract(audioFileName, secretKey);
+            console.log("Encrypted Text Extracted:", encryptedText);
 
-    const encryptedText = SpreadSpectrum.extract(audioFilePath, secretKey);
-    const decryptedMessage = AES.decryptAES128(encryptedText, secretKey);
+            const decryptedMessage = AES.decryptAES128(encryptedText, secretKey);
+            console.log("Decrypted Message:", decryptedMessage);
 
-    fs.unlinkSync(audioFilePath);
-    res.json({ message: decryptedMessage });
-});
-
-module.exports = router;
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ decryptedMessage })
+            };
+        } else {
+            return {
+                statusCode: 405,
+                body: JSON.stringify({ error: "Method Not Allowed" })
+            };
+        }
+    } catch (error) {
+        return {
+            statusCode: 500,
+            body: JSON.stringify({ error: error.message })
+        };
+    }
+};
