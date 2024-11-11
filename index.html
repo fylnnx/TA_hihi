@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Embed and Extract Message from Audio</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Embed and Extract Message from Audio</h1>
+
+        <div id="embed-section">
+            <h2>Embed Message</h2>
+            <label for="audio-file">Select Audio File:</label>
+            <input type="file" id="audio-file" accept="audio/*"><br><br>
+
+            <label for="message">Message (Max 32 characters):</label>
+            <input type="text" id="message" maxlength="32"><br><br>
+
+            <label for="key">Key:</label>
+            <input type="text" id="key" maxlength="32"><br><br>
+
+            <button id="embed-button">Embed Message</button>
+        </div>
+
+        <div id="extract-section">
+            <h2>Extract Message</h2>
+            <label for="audio-file-extract">Select Stego Audio File:</label>
+            <input type="file" id="audio-file-extract" accept="audio/*"><br><br>
+
+            <label for="key-extract">Key:</label>
+            <input type="text" id="key-extract" maxlength="32"><br><br>
+
+            <button id="extract-button">Extract Message</button>
+
+            <h3>Extracted Message:</h3>
+            <p id="extracted-message"></p>
+        </div>
+    </div>
+
+    <script src="js/embed.js"></script>
+    <script src="js/extract.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
