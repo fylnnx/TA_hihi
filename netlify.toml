@@ -1,3 +1,0 @@
-[build]
-  functions = "routes"
-  publish = "public"
